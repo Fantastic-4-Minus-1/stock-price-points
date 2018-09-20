@@ -1,0 +1,40 @@
+.bottom-badges {
+  padding: 13px;
+  text-transform: none;
+  background: var(--lightbg);
+  font-size: 13px;
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.25px;
+  line-height: 19px;
+}
+.market-close {
+  padding: 13px;
+  text-transform: none;
+  background: #000;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.25px;
+  line-height: 19px;
+}
+.market-close:hover {
+  background: #fff;
+  color: #000;
+}
+.bottom-badges:hover {
+  background: #000;
+}
+
+i {
+  margin-right: 5px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.tooltip {
+  font-size: 12px;
+  max-width: 120px;
+}

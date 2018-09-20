@@ -1,0 +1,1 @@
+module.exports = (log, port) => log(`Ruby app listening on port ${port.toString()}!`);

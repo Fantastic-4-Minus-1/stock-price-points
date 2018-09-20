@@ -1,0 +1,180 @@
+.content-sidebarOpened {
+	font-size: 13px;
+	font-family: DIN Pro,-apple-system,BlinkMacSystemFont,sans-serif;
+	letter-spacing: 0.25px;
+	line-height: 19px;
+	position: fixed;
+  top: 50px;
+  flex: 150px 0 0;
+  right: 100px;
+  padding: 20px 10px 40px;
+  width: 255.77778px;
+  box-shadow: 0 0 4px 1px rgba(0,0,0,.01), 0 3px 24px rgba(48,51,51,.09);
+  flex-direction: column;
+}
+
+.header-classOpened {
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 12px 0;
+  border-bottom: 1px solid;
+  border-bottom-color: lightgrey;
+  margin: 0 -10px;
+  height: 32px;
+}
+
+.orderInputOpened {
+  width: 76px;
+  height: 30px;
+  
+}
+.menuBodyOpened {
+	padding-top: 12px;
+	padding-bottom: 12px;
+}
+label {
+	justify-content: space-between;
+  margin: 0 12px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+}
+
+label .inputOpened {
+	text-align: right;
+  border-color: transparent;
+  background-color: #F3F3F3;
+	border-radius: 4px;
+  color: black;
+}
+
+.estimatedCostOpened {
+	border-top: 1px solid;
+  border-top-color: lightgrey;
+	justify-content: space-between;
+}
+
+.checkOutOpened {
+  padding: 12px 24px;
+  margin: 0 -12px;
+
+}
+
+.buttonOpened {
+	background-color: #21ce99;
+	border-color: #21ce99;
+	border-radius: 4px;
+	font-weight: 500;
+	justify-content: center;
+	height: 48px;
+	border: 1px solid transparent;
+	width: 227.766px;
+	padding: 0 32px 0 32px;
+  color: white;
+  margin: 0 14px;
+}
+
+.footerclassOpened {
+  margin: 0 -10px;
+  border-top: 1px solid;
+  border-top-color: lightgrey;
+  text-align: center;
+  padding-top: 10px;
+  margin-bottom: -20px;
+}
+
+.watchListOpened {
+  color: #21ce99;
+  font-family: DIN Pro,-apple-system,BlinkMacSystemFont,sans-serif;
+  padding: 0 24px;
+  width: 227px;
+  background: none;
+  border-radius: 4px;
+  border-color: #21ce99;
+  height: 48px;
+  margin-top: 24px;
+  position: fixed;
+  margin: 24px 24px;
+  right: 100px;
+  z-index: -1; 
+  margin-top: 60px;
+}
+
+button:focus {
+	outline:0;
+}
+
+.popup-menuOpened {
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 19px;
+  color: #171718;
+  background-color: white;
+  position: absolute;
+  padding: 0 24px;
+  top: 160.5px;
+  left: -145px;
+  margin: 0 -24px;
+  width: 243px;
+  height: 337px;
+  box-shadow: rgba(0,0,0,0.11765) 0px 1px 6px, rgba(0,0,0,0.11765) 0px 1px 4px;
+  }
+
+.popupHeaderOpened {
+  text-align: left;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 12px 12px;
+  margin: 20px -24px 20px -24px;
+  height: 66px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 22px;
+}
+
+.popupFooterOpened {
+  margin: 0 -10px;
+  border-top: 1px solid;
+  border-top-color: lightgrey;
+  text-align: left;
+  padding-top: 10px;
+  margin-bottom: -20px;
+  color: lightgrey;
+}
+
+.slideDownOpened {
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 19px;
+  color: #171718;
+  background-color: white;
+  right: -30px;
+  padding: 0 24px;
+  top: 51.5px;
+  margin: 0 -24px;
+}
+
+.clickableOpened {
+  font-weight: 500;
+  text-decoration: none;
+  color: #21ce99;
+}
+
+.backButtonOpened {
+  font-weight: 500;
+  text-decoration: none;
+  color: #21ce99;
+  border: transparent;
+  margin-left: 14px;
+  width: 227.77px;
+  margin-top: 10px;
+}
+
+.selectInputOpened {
+  text-align: right;
+  border-color: transparent;
+  background-color: #F3F3F3;
+  border-radius: 4px;
+  color: black;
+}

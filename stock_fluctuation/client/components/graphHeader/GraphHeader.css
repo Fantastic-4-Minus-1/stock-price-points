@@ -1,0 +1,14 @@
+.uk-heading-primary {
+  font-size: 36px;
+  letter-spacing: -0.29px;
+  line-height: 42px;
+  margin: 0;
+  font-weight: 500;
+}
+.money-title,
+.money-title > span {
+  font-size: 36px;
+  font-weight: 400 !important;
+  letter-spacing: -0.7px;
+  line-height: 42px;
+}

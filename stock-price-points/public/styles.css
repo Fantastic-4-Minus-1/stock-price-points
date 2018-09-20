@@ -1,0 +1,52 @@
+* {
+  font-family: din-2014, sans-serif !important;
+  font-style: normal !important;
+  letter-spacing: .25px !important;
+  line-height: 19px;
+}
+
+.main-div-closed {
+  background-color: #1b1b1d !important;
+  width: 682px !important;
+  padding: 30px !important;
+  margin: 30px !important;
+}
+
+.main-div-open {
+  background-color: #fff !important;
+  width: 682px !important;
+  padding: 30px !important;
+  margin: 30px !important;
+}
+
+.main-header {
+  width: 676px !important;
+}
+
+.is-open-header {
+  color: #fff !important;
+}
+
+.label-header {
+  width: 676px !important;
+  text-align: center !important;
+}
+
+.right-now {
+  font-size: 12px !important;
+  font-weight: 400px !important;
+}
+
+.prices-container {
+  display: grid !important;
+  grid-template-columns: 1fr 5fr 1fr !important;
+  width: 676px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: .25px !important;
+  line-height: 19px !important;
+}
+
+.dollar-amount {
+  font-weight: normal !important;
+}

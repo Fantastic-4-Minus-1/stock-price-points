@@ -1,0 +1,40 @@
+.my-badges {
+  padding: 13px;
+  text-transform: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  line-height: 19px;
+}
+/* Styles for when market is Open */
+.open-market-up {
+  background: var(--primary-bglight);
+  color: var(--primary-color);
+}
+.open-market-up:hover {
+  background: var(--primary-bg);
+}
+.open-market-down {
+  background: #fff5f3;
+  color: #f45531;
+}
+.open-market-down:hover {
+  background: #f45531;
+  color: #fff;
+}
+.close-market-up {
+  background: #182b27;
+  color: var(--primary-color);
+}
+.close-market-up:hover {
+  background: var(--primary-bg);
+  color: #1b1b1d;
+}
+.close-market-down {
+  background: #2d201f;
+  color: #f45531;
+}
+.close-market-down:hover {
+  background: #f45531;
+  color: #1b1b1d;
+}

@@ -1,0 +1,55 @@
+{
+  "name": "side-nav-bar",
+  "version": "1.0.0",
+  "description": "Stock fluctuation component for robin-hackers app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/server.js",
+    "build": "webpack --mode production --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinHackers/side-nav-bar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobinHackers/side-nav-bar/issues"
+  },
+  "homepage": "https://github.com/RobinHackers/side-nav-bar/blob/master/README.md",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "faker": "^4.1.0",
+    "jquery": "^3.3.1",
+    "mongoose": "^5.2.13",
+    "path": "^0.12.7",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-router": "^4.3.1",
+    "react-sticky-box": "^0.6.4",
+    "webpack": "^4.17.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "axios": "^0.18.0",
+    "babel-loader": "^8.0.2",
+    "css-loader": "^1.0.0",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "moment": "^2.22.2",
+    "morgan": "^1.9.0",
+    "node-mongo-seeds": "^3.1.0",
+    "style-loader": "^0.23.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.7"
+  }
+}
