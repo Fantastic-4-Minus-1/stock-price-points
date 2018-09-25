@@ -1,5 +1,9 @@
 .parent-container {
-  background-color: #1b1b1d;
-  align-content: center;
-  padding: 40px 80px 20px;
+  padding: 60px 80px 20px;
+}
+
+.header-img {
+  position: fixed;
+  z-index: 5;
+  top: 0;
 }

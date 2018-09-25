@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/robinhood';
-
+const { MONGODB_URI } = process.env;
 mongoose.connect(MONGODB_URI);
 
 const db = mongoose.connection;

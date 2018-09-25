@@ -25,8 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api', routes);
-
+app.use('/api/graph', routes);
 
 module.exports = {
   app,

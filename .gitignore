@@ -1,6 +1,7 @@
 .DS_Store
 
 proxy/node_modules/
+node_modules/
 
 countdown/public/app.js
 iteminfo/public/app.js

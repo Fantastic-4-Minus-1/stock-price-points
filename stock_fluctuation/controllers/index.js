@@ -12,9 +12,9 @@ module.exports = {
 
   fetchCompany: (req, res) => {
     const company = req.params.company_name.split('-').join(' ');
-    Company.find({ company: company }, (err, company) => {
+    Company.find({ company }, (err, resp) => {
       if (err) return console.log(err);
-      res.json(company);
+      res.json(resp);
     });
   }
 };

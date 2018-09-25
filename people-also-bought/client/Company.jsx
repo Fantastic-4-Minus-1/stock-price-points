@@ -1,37 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Analyst from './Analyst.jsx';
+// import Company from './Company.jsx';
 
-const Company = ({
+
+const CompanyList = ({
+  companies,
+  currentPrices,
   currentPercentages,
-  company,
-  price,
+  handleArrowClick,
+  marketisOpen,
+  showLeft,
+  showRight,
 }) => (
-  <div className="flex-item">
-    <div className="company-title">{company.company}</div>
-    <div className="analyst">
-      <Analyst
-        display={`${company.percentage}%`}
-        tooltip={`${company.percentage}% anaylsts agree that
-        ${company.company} is a buy.`}
-      />
+  <div className={marketisOpen ? 'robinhood-open-up' : 'robinhood-closed-down'}>
+    <div className="flex-container">
+      <div className={`clickers ${showLeft ? 'visible' : null}`}>
+        <a href onClick={handleArrowClick} className="leftArrow"><i name="left" className="fas fa-angle-left" /></a>
+      </div>
+      {companies.map((company, index) => (
+        <Company
+          company={company}
+          price={currentPrices[index]}
+          currentPercentage={currentPercentages[index]}
+          marketisOpen={marketisOpen}
+        />
+      ))}
+      <div className={`clickers ${showRight ? 'visible' : null}`}>
+        <a href onClick={handleArrowClick} className="rightArrow"><i name="right" className="fas fa-angle-right" /></a>
+      </div>
     </div>
-    <div className="price">
-      {`$${price}`}
-    </div>
-    <span className="differences">{currentPercentages}</span>
   </div>
 );
 
-Company.propTypes = {
-  company: PropTypes.shape({
-    name: PropTypes.string,
-    group: PropTypes.number,
-    percentage: PropTypes.number,
-    currentDay: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired,
-  price: PropTypes.number.isRequired,
+
+export default CompanyList;
+
+CompanyList.propTypes = {
+  companies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  currentPrices: PropTypes.arrayOf(PropTypes.number).isRequired,
+  handleArrowClick: PropTypes.func.isRequired,
+  marketisOpen: PropTypes.bool.isRequired,
+  showLeft: PropTypes.bool.isRequired,
+  showRight: PropTypes.bool.isRequired,
   currentPercentages: PropTypes.number.isRequired,
 };
-
-export default Company;

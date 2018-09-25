@@ -37,9 +37,10 @@ class App extends React.Component {
     };
 
     this.getDataSetInitialState = () => {
-      axios.get('http://localhost:3002/data/company/onecompany') // axios.get(`localhost:3002/data/company${window.location.pathname}`)
-
+      axios.get(`/api/stockPricePoints${window.location.pathname}`)
         .then((output) => {
+          console.log(output);
+          console.log('stockPoints:', window.location.pathname);
           const { data } = output;
           const { yearly, currentPrice } = data[0];
           const { yearAverage, yearLowest, yearHighest } = yearly;
@@ -55,7 +56,7 @@ class App extends React.Component {
           }
 
           const time = moment();
-          const isOpen = moment('9:00', 'hh:mm');
+          const isOpen = moment('6:00', 'hh:mm');
           const isClosed = moment('15:00', 'hh:mm');
 
           const marketIsOpen = (time.isBetween(isOpen, isClosed));

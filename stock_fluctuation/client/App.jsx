@@ -31,7 +31,7 @@ export default class App extends Component {
       lastPrice: null,
       newPrice: null,
       showMonth: false,
-      showWeek: false
+      showWeek: false,
     };
 
     this.allTicks = this.allTicks.bind(this);
@@ -45,22 +45,10 @@ export default class App extends Component {
     this.checkTime = this.checkTime.bind(this);
   }
 
-  componentDidMount() {
-    setInterval(() => this.checkTime(), 1000);
-
-    axios
-      .get('http://localhost:3001/api')
-      .then(res => res.data)
-      .then(data => {
-        const company = data[3];
-        this.allTicks(company.tickers);
-        this.setState({ companies: data, company });
-      });
-  }
   checkTime() {
     // Check time for app theme
     const time = moment();
-    const beforeTime = moment('09:00', 'hh:mm');
+    const beforeTime = moment('06:00', 'hh:mm');
     const afterTime = moment('15:00', 'hh:mm');
 
     if (time.isBetween(beforeTime, afterTime)) {
@@ -69,8 +57,23 @@ export default class App extends Component {
       this.setState({ marketIsOpen: false });
     }
   }
+
+  componentDidMount() {
+    this.checkTime();
+    setInterval(() => this.checkTime(), 1000);
+
+    axios
+      .get(`/api/graph${window.location.pathname}`)
+      .then(res => res.data)
+      .then((data) => {
+        const company = data[0];
+        this.allTicks(company.tickers);
+        this.setState({ companies: data, company });
+      });
+  }
+
   allTicks(tickers) {
-    const allTicks = tickers.filter(ticker => {
+    const allTicks = tickers.filter((ticker) => {
       if (moment(ticker.date).isBefore(moment())) {
         return ticker;
       }
@@ -78,13 +81,13 @@ export default class App extends Component {
     // todays ticks
     const todayTicks = this.transformDayTicks([allTicks.pop()]);
     // ticks up to the time right now
-    const currentTicks = todayTicks.filter(tick => {
+    const currentTicks = todayTicks.filter((tick) => {
       if (moment(tick.dateTime).isBefore(moment())) {
         return tick;
       }
     });
     // the rest of the ticks for the day
-    const nextTicks = todayTicks.filter(tick => {
+    const nextTicks = todayTicks.filter((tick) => {
       if (moment(tick.dateTime).isAfter(moment())) {
         return tick;
       }
@@ -101,7 +104,7 @@ export default class App extends Component {
       nextTicks,
       startingPrice,
       lastPrice,
-      currentPrice
+      currentPrice,
     });
     this.checkMarketValue();
     this.updateTicks();
@@ -117,11 +120,13 @@ export default class App extends Component {
         this.state.currentTicks.length - 1
       ].price;
       const currentTicks = [...this.state.currentTicks, nextTick];
-      this.setState({ currentTicks, nextTicks, lastPrice, currentPrice });
-      //check market price
+      this.setState({
+ currentTicks, nextTicks, lastPrice, currentPrice 
+});
+      // check market price
       this.checkMarketValue();
 
-      //stop interval when ticks run out
+      // stop interval when ticks run out
       if (this.state.nextTicks.length === 0) {
         clearInterval(update);
       }
@@ -130,21 +135,21 @@ export default class App extends Component {
 
   transformDayTicks(tickers) {
     const array = flatten(
-      tickers.map(ticker => {
+      tickers.map((ticker) => {
         const dateStr = ticker.date.slice(0, 10);
-        let date = moment(dateStr, 'YYYY-MM-DD');
+        const date = moment(dateStr, 'YYYY-MM-DD');
         return ticker.price.map((ticks, index) => {
-          const dateTime = moment(dateStr + ' ' + ticks.currentTime);
+          const dateTime = moment(`${dateStr  } ${  ticks.currentTime}`);
           let time = moment(dateTime).format('HH:mm');
           time = time.split(':').join('');
           return {
             x: time,
             y: parseInt(ticks.currentPrice),
             dateTime,
-            price: ticks.currentPrice
+            price: ticks.currentPrice,
           };
         });
-      })
+      }),
     );
     return array;
   }
@@ -152,20 +157,20 @@ export default class App extends Component {
   transformWeekTicks(tickers) {
     let count = 0;
     const array = flatten(
-      tickers.map(ticker => {
+      tickers.map((ticker) => {
         const dateStr = ticker.date.slice(0, 10);
-        let date = moment(dateStr, 'YYYY-MM-DD');
+        const date = moment(dateStr, 'YYYY-MM-DD');
         return ticker.price.map((ticks, index) => {
-          const dateTime = moment(dateStr + ' ' + ticks.currentTime);
-          count = count + 0.5;
+          const dateTime = moment(`${dateStr  } ${  ticks.currentTime}`);
+          count += 0.5;
           return {
             x: count,
             y: parseInt(ticks.currentPrice),
             dateTime,
-            price: ticks.currentPrice
+            price: ticks.currentPrice,
           };
         });
-      })
+      }),
     );
     return array;
   }
@@ -174,15 +179,15 @@ export default class App extends Component {
     const array = flatten(
       tickers.map((ticker, index) => {
         const dateStr = ticker.date.slice(0, 10);
-        let date = moment(dateStr, 'YYYY-MM-DD');
+        const date = moment(dateStr, 'YYYY-MM-DD');
         const lastTick = ticker.price[ticker.price.length - 1];
         return {
           x: index + 1,
           y: parseInt(lastTick.currentPrice),
           dateTime: date,
-          price: lastTick.currentPrice
+          price: lastTick.currentPrice,
         };
-      })
+      }),
     );
     return array;
   }
@@ -195,6 +200,7 @@ export default class App extends Component {
       this.setState({ marketIsUp: true });
     }
   }
+
   changeTimeLimit(period) {
     switch (period) {
       case 'day':
@@ -202,7 +208,7 @@ export default class App extends Component {
         return this.setState({
           showDay: true,
           showWeek: false,
-          showMonth: false
+          showMonth: false,
         });
       case 'week':
         clearInterval(this.updateTicks);
@@ -210,7 +216,7 @@ export default class App extends Component {
           showDay: false,
           showMonth: false,
           showWeek: true,
-          timeTicks: this.transformWeekTicks(this.state.allTicks.slice(-5))
+          timeTicks: this.transformWeekTicks(this.state.allTicks.slice(-5)),
         });
       case 'month':
         clearInterval(this.updateTicks);
@@ -218,7 +224,7 @@ export default class App extends Component {
           showDay: false,
           showWeek: false,
           showMonth: true,
-          timeTicks: this.transformMonthTicks(this.state.allTicks)
+          timeTicks: this.transformMonthTicks(this.state.allTicks),
         });
         break;
       default:
@@ -229,11 +235,11 @@ export default class App extends Component {
   updatePrice(newPrice, show) {
     if (show && newPrice !== this.state.currentPrice) {
       this.setState({
-        newPrice
+        newPrice,
       });
     } else if (!show) {
       this.setState({
-        newPrice: null
+        newPrice: null,
       });
     }
   }
@@ -251,9 +257,9 @@ export default class App extends Component {
       marketIsUp,
       newPrice,
       showWeek,
-      showMonth
+      showMonth,
     } = this.state;
-    let tickers = showDay ? currentTicks : timeTicks;
+    const tickers = showDay ? currentTicks : timeTicks;
     return (
       <div
         id="stockFlucuation"
@@ -266,7 +272,7 @@ export default class App extends Component {
           percent={anaylst_percent}
           owners={robinhood_owners}
           company_name={company}
-          currentPrice={newPrice ? newPrice : currentPrice}
+          currentPrice={newPrice || currentPrice}
           lastPrice={lastPrice}
           marketIsOpen={marketIsOpen}
         />

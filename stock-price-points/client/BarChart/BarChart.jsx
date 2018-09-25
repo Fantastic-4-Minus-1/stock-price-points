@@ -63,7 +63,6 @@ const BarChart = (
           const xOnLine = index * (itemWidth + itemMargin);
 
           let filler = marketIsOpen ? '#F3F3F3' : '#0E0D0D';
-          console.log('color', upDownColor);
           // Positive Percent Change
           if (percentChange > 0) {
             if ((xOnLine) >= (averageOnTheLine - 11) && (xOnLine + 11.45) < priceOnTheLine) {

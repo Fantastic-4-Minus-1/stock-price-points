@@ -1,12 +1,12 @@
 * {
-  font-family: din-2014, sans-serif !important;
+  font-family: din-2014, sans-serif;
   font-style: normal !important;
   letter-spacing: .25px !important;
   line-height: 19px;
 }
 
 .main-div-closed {
-  background-color: #1b1b1d !important;
+  background-color: #1b1b1d;
   width: 682px !important;
   padding: 30px !important;
   margin: 30px !important;

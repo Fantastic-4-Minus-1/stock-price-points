@@ -34,7 +34,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3004/stocks/sideBar')
+    axios.get(`/api/sidebar${window.location.pathname}`)
       .then(res => {
         const data = res.data;
         this.setState({
@@ -54,7 +54,7 @@ class App extends React.Component {
     function theLoop(i) {
       setTimeout(function() {
         const time = moment();
-        const isOpen = moment('9:00', 'hh:mm');
+        const isOpen = moment('6:00', 'hh:mm');
         const isClosed = moment('15:00', 'hh:mm');
         const marketOpen = (time.isBetween(isOpen, isClosed));
         variable.setState({

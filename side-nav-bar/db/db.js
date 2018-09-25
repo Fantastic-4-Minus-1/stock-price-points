@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 
 const companiesSchema = new mongoose.Schema({
 	company: String,
-	currentDay: Array
+	companyName: String,
+	currentDay: Array,
 });
 
 const Company = mongoose.model('Company', companiesSchema);

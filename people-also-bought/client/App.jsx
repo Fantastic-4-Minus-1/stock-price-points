@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../public/stylesheet.css';
+import './App.css';
 import moment from 'moment';
 import CompanyList from './CompanyList.jsx';
 
 const axios = require('axios');
-
 
 class App extends React.Component {
   constructor(props) {
@@ -17,26 +16,47 @@ class App extends React.Component {
       currentPercentages: [],
       min: 1,
       max: 8,
-      priceisUp: true,
       marketisOpen: true,
       showRight: true,
       showLeft: false,
     };
-
     this.getRandomIntInclusive = this.getRandomIntInclusive.bind(this);
     this.handleArrowClick = this.handleArrowClick.bind(this);
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3003/people-also-bought', {
-      params: {
-        group: this.getRandomIntInclusive(1, 8),
-      },
-    })
+    const time = moment();
+    const isOpen = moment('9:00', 'hh:mm');
+    const isClosed = moment('15:00', 'hh:mm');
+    const marketisOpen = (time.isBetween(isOpen, isClosed));
+    this.setState({
+      marketisOpen,
+    });
+
+    axios.get(`/api/people-also-bought${window.location.pathname}`)
       .then((res) => {
+        function percentDiff(priceOne, priceTwo) {
+          return (((priceTwo - priceOne) / priceOne) * 100);
+        }
         this.setState({
           companies: res.data,
           currentCompanies: res.data.slice(0, 4),
+          currentPrices: [
+            res.data[0].currentDay[0].currentPrice,
+            res.data[1].currentDay[0].currentPrice,
+            res.data[2].currentDay[0].currentPrice,
+            res.data[3].currentDay[0].currentPrice,
+          ],
+          currentPercentages: [
+            percentDiff(res.data[0].currentDay[0].currentPrice,
+              res.data[0].currentDay[1].currentPrice).toFixed(2),
+            percentDiff(res.data[1].currentDay[0].currentPrice,
+              res.data[1].currentDay[1].currentPrice).toFixed(2),
+            percentDiff(res.data[2].currentDay[0].currentPrice,
+              res.data[2].currentDay[1].currentPrice).toFixed(2),
+            percentDiff(res.data[3].currentDay[0].currentPrice,
+              res.data[3].currentDay[1].currentPrice).toFixed(2),
+          ],
         });
         this.updateData();
       })
@@ -53,7 +73,7 @@ class App extends React.Component {
 
   updateData() {
     const { currentCompanies } = this.state;
-    const appScroll = this;
+    const thisFunc = this;
 
     function percentDiff(priceOne, priceTwo) {
       return (((priceTwo - priceOne) / priceOne) * 100);
@@ -66,7 +86,7 @@ class App extends React.Component {
         const isClosed = moment('15:00', 'hh:mm');
         const marketisOpen = (time.isBetween(isOpen, isClosed));
 
-        appScroll.setState({
+        thisFunc.setState({
           currentPrices: [
             currentCompanies[0].currentDay[i].currentPrice,
             currentCompanies[1].currentDay[i].currentPrice,
@@ -88,11 +108,10 @@ class App extends React.Component {
         if (i++) {
           theLoop(i);
         }
-      }, 300);
+      }, 10000);
     }
     theLoop(1);
   }
-
 
   handleArrowClick(e) {
     const { showLeft, showRight, companies } = this.state;
@@ -126,24 +145,23 @@ class App extends React.Component {
       currentCompanies,
       currentPrices,
       marketisOpen,
-      priceisUp,
       showRight,
       showLeft,
     } = this.state;
 
     return (
-      <div id="peopleAlsoBought">
-        <h1>People Also Bought</h1>
+      <div className={marketisOpen ? 'robinhood-is-open' : 'robinhood-is-closed'}>
+        <h1 className={`header-title ${marketisOpen ? 'robinhood-is-open' : 'robinhood-is-closed'} `}>People Also Bought</h1>
         <div>
           <CompanyList
             companies={currentCompanies}
             currentPrices={currentPrices}
             currentPercentages={currentPercentages}
             marketisOpen={marketisOpen}
-            price={priceisUp}
             showRight={showRight}
             showLeft={showLeft}
             handleArrowClick={this.handleArrowClick}
+            updatePriceChange={this.updatePriceChange}
           />
         </div>
       </div>
