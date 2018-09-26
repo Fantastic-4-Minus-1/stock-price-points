@@ -12,11 +12,15 @@ db.once('open', () => {
 
 const companySchema = new mongoose.Schema({
   company: String,
-  weeks: Array,
-  stocksPurchasedPerYear: Number,
-  yearHighest: Number,
-  yearLowest: Number,
-  yearAverage: Number,
+  companyAbbriev: String,
+  weeks: [],
+  yearly: {
+    stocksPurchasedYear: Number,
+    yearHighest: Number,
+    yearLowest: Number,
+    yearAverage: Number
+  },
+  currentPrice: [Number],
 });
 
 const Company = mongoose.model('Company', companySchema);
