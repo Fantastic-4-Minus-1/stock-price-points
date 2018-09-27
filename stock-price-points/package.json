@@ -11,7 +11,8 @@
     "test": "jest",
     "start": "nodemon server/index.js",
     "build": "webpack --mode production",
-    "build-watch": "webpack --mode production --watch"
+    "build-watch": "webpack --mode production --watch",
+    "write-data": "node data/dataFileGenerator.js"
   },
   "jest": {
     "snapshotSerializers": [

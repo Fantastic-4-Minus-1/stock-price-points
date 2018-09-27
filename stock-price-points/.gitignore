@@ -24,3 +24,6 @@ coverage
 build/
 dist/
 
+# Generated Data
+data/seed/
+

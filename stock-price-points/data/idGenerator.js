@@ -1,6 +1,6 @@
-console.time('clock');
+// console.time('clock');
 
-const maxEntries = 1000000;
+const dataSetSize = 1000000;
 
 const companyNames = {
   'A': 'Analytics',
@@ -47,7 +47,7 @@ const generateTickerSymbol = () => {
   const result = [];
   let count = 0;
   const uniqueTicker = (current = '') => {
-    if (count >= maxEntries) { return; }
+    if (count >= dataSetSize) { return; }
     if (current.length === 5) {
       count++;
       return result.push(current);
@@ -69,10 +69,12 @@ function generateCompanyNames(ticker) {
 const ticker = generateTickerSymbol();
 const names = generateCompanyNames(ticker);
 
-console.log(ticker.length);
-console.log(ticker[0]);
+// console.log(ticker.length);
+// console.log(ticker[0]);
 
-console.log(names.length);
-console.log(names.slice(0, 10));
+// console.log(names.length);
+// console.log(names.slice(0, 10));
 
-console.timeEnd('clock');
+// console.timeEnd('clock');
+
+module.exports = { companyNames, alphabet };

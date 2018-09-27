@@ -1,6 +1,30 @@
+const fs = require('fs');
+const { companyNames, alphabet } = require('./idGenerator');
+
 console.time('clock');
 
-const dataSetSize = 1000; // number of companies
+const dataSetSize = 100000; // number of companies
+
+// generate ticker & associating data
+const generateTickerSymbol = () => {
+  const result = [];
+  let count = 0;
+  const uniqueTicker = (current = '') => {
+    if (count >= dataSetSize) { return; }
+    if (current.length === 5) {
+      count++;
+      return result.push(current);
+    }
+    alphabet.forEach(char => uniqueTicker(current + char));
+  };
+  uniqueTicker();
+  return result;
+};
+
+// company names
+function generateCompanyNames(ticker) {
+  return `${companyNames[ticker[0]]} ${companyNames[ticker[4]]}`;
+}
 
 // price distribution
 const numberOfDivs = 30; // number of bars
@@ -14,13 +38,11 @@ const currentTimeIntervals = 24; // simulate price changes every 10 min for half
 
 const posOrNeg = Math.random() < 0.5 ? -1 : 1;
 
+function trunc(number) { return +number.toFixed(2); }
+
 function randomNumber(min, max) {
  return Math.random() * (max - min) + min;
 };
-
-function trunc(number) {
-  return +number.toFixed(2);
-}
 
 function generateDataDist() {
   let results = [];
@@ -77,19 +99,27 @@ function generateCurrentPrice(annualAvg, minDiff = dailyPriceRange[0], maxDiff =
   return currentPrices;
 }
 
-function assembleTestData(n = dataSetSize) {
-  let results = [];
-  for (let i = 0; i < n; i++) {
+function assembleTestData(tickers) {
+  let results = tickers.map(ticker => {
+    let companyAbbriev = ticker;
+    let company = generateCompanyNames(ticker);
     let weeks = generateDataDist();
     let yearly = generateAnnualData(weeks);
     let currentPrice = generateCurrentPrice(yearly.yearAverage);
-    results.push({ weeks, yearly, currentPrice });
-  }
+    return { company, companyAbbriev, weeks, yearly, currentPrice };
+  });
   return results;
 }
 
-const dataSet = assembleTestData();
+const tickers = generateTickerSymbol();
+const dataSet = assembleTestData(tickers);
+
+fs.writeFile(__dirname + '/seed/data.json', JSON.stringify(dataSet), (err) => {
+  if (err) { console.log(err); }
+  console.log('File saved');
+  console.timeEnd('clock');
+})
+
 console.log(dataSet.length);
 console.log(dataSet[1]);
 
-console.timeEnd('clock');
