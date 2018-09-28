@@ -13,10 +13,7 @@
     "build": "webpack --mode production",
     "build-watch": "webpack --mode production --watch",
     "printId": "node data/idGenerator.js",
-    "write-data-1": "node data/dataFileGenA-C.js & node data/dataFileGenD-F.js",
-    "write-data-2": "node data/dataFileGenG-I.js & node data/dataFileGenJ-L.js",
-    "write-data-3": "node data/dataFileGenM-O.js & node data/dataFileGenP-R.js",
-    "write-data-4": "node data/dataFileGenS-V.js",
+    "gen-data": "node data/generateData.sh",
     "write-data-test": "node data/dataFileGenW.js"
   },
   "jest": {
