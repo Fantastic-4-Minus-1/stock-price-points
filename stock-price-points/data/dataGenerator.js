@@ -1,12 +1,13 @@
 const fs = require('fs');
 const { companyNames, alphabet } = require('./idGenerator');
+// var wstream = fs.createWriteStream('./data/seed/dataA.json');
 
-console.time('clock');
-
-const dataSetSize = 100000; // number of companies
+let dataSetSize = 500000; // number of companies
 
 // generate ticker & associating data
-const generateTickerSymbol = () => {
+const generateTickerSymbol = (set) => {
+  dataSetSize = (set[0] === 'V') ? 403505 : 500000;
+  dataSetSize = (set[0] === 'W') ? 5 : 500000;
   const result = [];
   let count = 0;
   const uniqueTicker = (current = '') => {
@@ -17,7 +18,7 @@ const generateTickerSymbol = () => {
     }
     alphabet.forEach(char => uniqueTicker(current + char));
   };
-  uniqueTicker();
+  set.forEach(letter => { uniqueTicker(letter) });
   return result;
 };
 
@@ -27,14 +28,14 @@ function generateCompanyNames(ticker) {
 }
 
 // price distribution
-const numberOfDivs = 30; // number of bars
+const numberOfDivs = 15; // number of bars
 const maxPurchasedPerDiv = 800; // height of bar graph
 
 // price variables
 const marketPriceRange = [5, 350]; // range of annual average market prices for all companies
 const dailyDevRange = [0.01, 0.08]; // deviation of current price from daily average throughout 1 day
 const dailyPriceRange = [0.03, 0.02]; // deviation of daily average from annual market average
-const currentTimeIntervals = 24; // simulate price changes every 10 min for half the business day (4 hrs total)
+const currentTimeIntervals = 1; // simulate price changes every 10 min for half the business day (4 hrs total)
 
 const posOrNeg = Math.random() < 0.5 ? -1 : 1;
 
@@ -99,27 +100,42 @@ function generateCurrentPrice(annualAvg, minDiff = dailyPriceRange[0], maxDiff =
   return currentPrices;
 }
 
-function assembleTestData(tickers) {
-  let results = tickers.map(ticker => {
+function assembleTestData(set, wstream, label) {
+  console.time(`clock${label}`);
+  const tickers = generateTickerSymbol(set);
+
+  wstream.write('[');
+
+  tickers.forEach((ticker, index) => {
     let companyAbbriev = ticker;
     let company = generateCompanyNames(ticker);
     let weeks = generateDataDist();
     let yearly = generateAnnualData(weeks);
     let currentPrice = generateCurrentPrice(yearly.yearAverage);
-    return { company, companyAbbriev, weeks, yearly, currentPrice };
+    let dataEntry = { company, companyAbbriev, weeks, yearly, currentPrice };
+    wstream.write(JSON.stringify(dataEntry), () => {  });
+    if (index < tickers.length - 1) { wstream.write(','); }
+    else { 
+      console.log('Last entry: ', ticker);
+      console.log(index + 1, 'entries logged'); 
+    }
   });
-  return results;
+    // fs.appendFile(`${__dirname}/seed/data.json`, JSON.stringify(dataSet) + ',', (err) => {
+    //   if (err) { console.log(err); }
+    //   console.log('Entry saved');
+    //   console.time('clock');
+    // })
+  wstream.write(']');
+  wstream.end();
+
+  wstream.on('finish', function () {
+    console.timeEnd(`clock${label}`);
+  });
 }
 
-const tickers = generateTickerSymbol();
-const dataSet = assembleTestData(tickers);
+// const dataSet = assembleTestData();
 
-fs.writeFile(__dirname + '/seed/data.json', JSON.stringify(dataSet), (err) => {
-  if (err) { console.log(err); }
-  console.log('File saved');
-  console.timeEnd('clock');
-})
+module.exports = { assembleTestData }
 
-console.log(dataSet.length);
-console.log(dataSet[1]);
+
 

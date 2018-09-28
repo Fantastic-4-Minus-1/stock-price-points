@@ -1,6 +1,4 @@
-// console.time('clock');
-
-const dataSetSize = 1000000;
+const dataSetSize = 10000000;
 
 const companyNames = {
   'A': 'Analytics',
@@ -43,7 +41,7 @@ const range = (startChar, endChar) => {
 
 const alphabet = range('A', 'Z');
 
-const generateTickerSymbol = () => {
+const generateTickerSymbol = (set) => {
   const result = [];
   let count = 0;
   const uniqueTicker = (current = '') => {
@@ -54,27 +52,19 @@ const generateTickerSymbol = () => {
     }
     alphabet.forEach(char => uniqueTicker(current + char));
   };
-  uniqueTicker();
+  set.forEach(letter => { uniqueTicker(letter) });
   return result;
 };
 
-function generateCompanyNames(ticker) {
-  const names = [];
-  ticker.map(uniqueTicker => {
-    names.push(`${companyNames[uniqueTicker[0]]} ${companyNames[uniqueTicker[4]]}`);
-  })
-  return names;
-}
+const set = range('A', 'V');
+const ticker = generateTickerSymbol(set);
 
-const ticker = generateTickerSymbol();
-const names = generateCompanyNames(ticker);
+console.log(ticker.length);
+console.log(ticker[0]);
+console.log(ticker[ticker.length - 1]);
 
-// console.log(ticker.length);
-// console.log(ticker[0]);
-
-// console.log(names.length);
-// console.log(names.slice(0, 10));
-
-// console.timeEnd('clock');
+// console.log(26 * 26 * 26 * 26); // 456976
+// console.log(10000000 % 456976); // 403504
+// console.log(456976 - (10000000 % 456976)); // 53472
 
 module.exports = { companyNames, alphabet };
