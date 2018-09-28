@@ -39,3 +39,10 @@ npm install -g webpack
 npm install
 ```
 
+### CRUD API
+
+GET all companies: "/api/stockPricePoints/"
+GET one company: "/api/stockPricePoints/:company"
+DELETE one company: "/api/stockPricePoints/:company"
+POST one company: "/api/stockPricePoints/"
+PUT one company: "/api/stockPricePoints/:company"
