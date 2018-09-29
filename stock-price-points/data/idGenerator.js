@@ -59,9 +59,9 @@ const generateTickerSymbol = (set) => {
 const set = range('A', 'V');
 const ticker = generateTickerSymbol(set);
 
-console.log(ticker.length);
-console.log(ticker[0]);
-console.log(ticker[ticker.length - 1]);
+// console.log(ticker.length);
+// console.log(ticker[0]);
+// console.log(ticker[ticker.length - 1]);
 
 // console.log(26 * 26 * 26 * 26); // 456976
 // console.log(10000000 % 456976); // 403504

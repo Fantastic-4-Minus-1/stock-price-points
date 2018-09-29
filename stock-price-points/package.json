@@ -13,8 +13,10 @@
     "build": "webpack --mode production",
     "build-watch": "webpack --mode production --watch",
     "printId": "node data/idGenerator.js",
-    "gen-data": "node data/generateData.sh",
-    "write-data-test": "node data/dataFileGenW.js"
+    "gen-data": "node data/dataFileGenA-C.js & node data/dataFileGenD-F.js",
+    "write-data-test": "node data/dataFileGenW.js",
+    "load-db": "psql robinhood < ./database/schema.sql",
+    "seed": "node database/indexpg.js"
   },
   "jest": {
     "snapshotSerializers": [
@@ -24,6 +26,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-core": "^7.0.0-bridge.0",
+    "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "enzyme": "^3.6.0",
@@ -35,6 +38,8 @@
     "mongoose": "^5.2.13",
     "morgan": "^1.9.0",
     "path": "^0.12.7",
+    "pg": "^7.4.3",
+    "pg-promise": "^8.4.6",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",

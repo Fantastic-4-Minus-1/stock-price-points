@@ -7,7 +7,7 @@ const { Company } = require('../database/index.js');
 const app = express();
 const router = require('./routes');
 
-app.use(express.static('public'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));
@@ -18,13 +18,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/:company', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+app.use('/:company', express.static('public'));
 
 app.use('/api', router);
 
-// CRUD
+// app.get('/:company', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../public/index.html'));
+// });
+
+// CRUD API
 
 // curl -X GET http://localhost:3002/api/stockPricePoints/Hack%20Reactor
 // curl -X GET http://localhost:3002/api/stockPricePoints/
