@@ -13,10 +13,10 @@
     "build": "webpack --mode production",
     "build-watch": "webpack --mode production --watch",
     "printId": "node data/idGenerator.js",
-    "gen-data": "node data/dataFileGenA-C.js & node data/dataFileGenD-F.js",
-    "write-data-test": "node data/dataFileGenW.js",
+    "gen-data": "node data/dataFileGenA-C.js & node data/dataFileGenD-F.js && node data/dataFileGenG-I.js & node data/dataFileGenJ-L.js && node data/dataFileGenM-O.js & node data/dataFileGenP-R.js node data/dataFileGenS-V.js",
+    "gen-data-script": "node data/generateData.sh",
     "load-db": "psql robinhood < ./database/schema.sql",
-    "seed": "node database/indexpg.js"
+    "seed-json": "node database/indexpg.js"
   },
   "jest": {
     "snapshotSerializers": [
@@ -74,3 +74,9 @@
     "babel-core": "7.0.0-bridge.0"
   }
 }
+
+
+(node data/dataFileGenA-C.js & node data/dataFileGenD-F.js) &&
+  (node data/dataFileGenG-I.js & node data/dataFileGenJ-L.js) &&
+  (node data/dataFileGenM-O.js & node data/dataFileGenP-R.js) &&
+  (node data/dataFileGenS-V.js)

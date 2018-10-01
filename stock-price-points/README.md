@@ -46,3 +46,8 @@ npm install
   - DELETE one company: "/api/stockPricePoints/:company"
   - POST one company: "/api/stockPricePoints/"
   - PUT one company: "/api/stockPricePoints/:company"
+
+### PostgreSQL
+  - To generate and load database:
+    npm run gen-data
+    npm run load-db
