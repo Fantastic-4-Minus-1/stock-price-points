@@ -100,6 +100,7 @@ function generateCurrentPrice(annualAvg, minDiff = dailyPriceRange[0], maxDiff =
   return currentPrices;
 }
 
+// Generates JSON data files
 function assembleTestData(set, wstream, label) {
   console.time(`clock${label}`);
   const tickers = generateTickerSymbol(set);
@@ -133,9 +134,39 @@ function assembleTestData(set, wstream, label) {
   });
 }
 
+// Generates CSV data files
+function assembleCSVTestData(set, wstream, label) {
+  console.time(`clock${label}`);
+  const tickers = generateTickerSymbol(set);
+
+  wstream.write('companyAbbriev,company,weeks,yearly,currentPrice\n');
+
+  tickers.forEach((ticker, index) => {
+    let companyAbbriev = ticker;
+    let company = generateCompanyNames(ticker);
+    let weeks = generateDataDist();
+    let yearly = generateAnnualData(weeks);
+    let currentPrice = generateCurrentPrice(yearly.yearAverage);
+    // let dataEntry = { company, companyAbbriev, weeks, yearly, currentPrice };
+    let dataEntry = [companyAbbriev, company, '"' + JSON.stringify(weeks) + '"', '"' + JSON.stringify(yearly) + '"', '"' + JSON.stringify(currentPrice) + '"']
+      .join(',').concat('\n');
+    if (index < tickers.length - 1) { wstream.write(dataEntry); }
+    else { 
+      wstream.write(dataEntry);
+      console.log('Last entry: ', ticker);
+      console.log(index + 1, 'entries logged'); 
+    }
+  });
+  wstream.end();
+
+  wstream.on('finish', function () {
+    console.timeEnd(`clock${label}`);
+  });
+}
+
 // const dataSet = assembleTestData();
 
-module.exports = { assembleTestData }
+module.exports = { assembleTestData, assembleCSVTestData }
 
 
 
