@@ -2,7 +2,7 @@ const fs = require('fs');
 const { alphabet, generateTickerSymbol, generateCompanyNames } = require('./idGenerator');
 
 // price distribution
-const numberOfDivs = 15; // number of bars
+const numberOfDivs = 30; // number of bars
 const maxPurchasedPerDiv = 800; // height of bar graph
 
 // price variables
