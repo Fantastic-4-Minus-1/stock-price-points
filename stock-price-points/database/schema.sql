@@ -25,26 +25,26 @@ CREATE TABLE stocksweekly (
   id INT NOT NULL,
   weekindex SMALLINT NOT NULL,
   weekaverage MONEY NOT NULL,
-  weekstockpurchased INT NOT NULL
-) PARTITION BY RANGE (id);
+  weekstockspurchased INT NOT NULL
+);
 
-CREATE TABLE stocksweekly2m PARTITION OF stocksweekly
-    FOR VALUES FROM (0) TO (2000000);
+-- CREATE TABLE stocksweekly2m PARTITION OF stocksweekly
+--     FOR VALUES FROM (0) TO (2000000);
 
-CREATE TABLE stocksweekly4m PARTITION OF stocksweekly
-    FOR VALUES FROM (2000000) TO (4000000);
+-- CREATE TABLE stocksweekly4m PARTITION OF stocksweekly
+--     FOR VALUES FROM (2000000) TO (4000000);
 
-CREATE TABLE stocksweekly6m PARTITION OF stocksweekly
-    FOR VALUES FROM (4000000) TO (6000000);
+-- CREATE TABLE stocksweekly6m PARTITION OF stocksweekly
+--     FOR VALUES FROM (4000000) TO (6000000);
 
-CREATE TABLE stocksweekly8m PARTITION OF stocksweekly
-    FOR VALUES FROM (6000000) TO (8000000);
+-- CREATE TABLE stocksweekly8m PARTITION OF stocksweekly
+--     FOR VALUES FROM (6000000) TO (8000000);
 
-CREATE TABLE stocksweekly10m PARTITION OF stocksweekly
-    FOR VALUES FROM (8000000) TO (10000000);
+-- CREATE TABLE stocksweekly10m PARTITION OF stocksweekly
+--     FOR VALUES FROM (8000000) TO (10000000);
 
-CREATE TABLE stocksweekly12m PARTITION OF stocksweekly
-    FOR VALUES FROM (10000000) TO (12000000);
+-- CREATE TABLE stocksweekly12m PARTITION OF stocksweekly
+--     FOR VALUES FROM (10000000) TO (12000000);
 
 \COPY stockprices FROM './data/seed/dataA-E.csv' WITH DELIMITER AS '|' CSV HEADER;
 \COPY stockprices FROM './data/seed/dataF-J.csv' WITH DELIMITER AS '|' CSV HEADER;
@@ -59,13 +59,14 @@ CREATE TABLE stocksweekly12m PARTITION OF stocksweekly
 \COPY stocksweekly FROM './data/seed/dataWeekU-V.csv' WITH DELIMITER AS '|' CSV HEADER;
 
 CREATE INDEX id ON stockprices USING hash (companyabbriev);
+CREATE INDEX weekid ON stocksweekly (id);
 
-CREATE INDEX ON stocksweekly2m USING hash (id);
-CREATE INDEX ON stocksweekly4m USING hash (id);
-CREATE INDEX ON stocksweekly6m USING hash (id);
-CREATE INDEX ON stocksweekly8m USING hash (id);
-CREATE INDEX ON stocksweekly10m USING hash (id);
-CREATE INDEX ON stocksweekly12m USING hash (id);
+-- CREATE INDEX ON stocksweekly2m USING hash (id);
+-- CREATE INDEX ON stocksweekly4m USING hash (id);
+-- CREATE INDEX ON stocksweekly6m USING hash (id);
+-- CREATE INDEX ON stocksweekly8m USING hash (id);
+-- CREATE INDEX ON stocksweekly10m USING hash (id);
+-- CREATE INDEX ON stocksweekly12m USING hash (id);
 
 GRANT ALL PRIVILEGES ON TABLE stockprices TO jenn;
 GRANT ALL PRIVILEGES ON TABLE stocksweekly TO jenn;
