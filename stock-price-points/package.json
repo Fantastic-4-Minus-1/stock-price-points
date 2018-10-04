@@ -13,7 +13,6 @@
     "build": "webpack --mode production",
     "build-watch": "webpack --mode production --watch",
     "gen-data": "node data/dataGenerator.js",
-    "gen-test": "node data/dataFileGenW.js",
     "load-sql": "psql robinhood < ./database/schema.sql",
     "load-cql": "cqlsh -e \"source './database/schema.cql'\""
   },

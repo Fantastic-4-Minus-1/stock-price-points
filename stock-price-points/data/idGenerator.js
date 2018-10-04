@@ -1,4 +1,4 @@
-const dataSetSize = 10000000;
+const dataSetSize = 2500000;
 
 const companyNames = {
   'A': 'Analytics',
@@ -56,15 +56,8 @@ const generateTickerSymbol = (set) => {
   return result;
 };
 
-const set = range('A', 'V');
-const ticker = generateTickerSymbol(set);
+function generateCompanyNames(ticker) {
+  return `${companyNames[ticker[0]]} ${companyNames[ticker[4]]}`;
+}
 
-// console.log(ticker.length);
-// console.log(ticker[0]);
-// console.log(ticker[ticker.length - 1]);
-
-// console.log(26 * 26 * 26 * 26); // 456976
-// console.log(10000000 % 456976); // 403504
-// console.log(456976 - (10000000 % 456976)); // 53472
-
-module.exports = { companyNames, alphabet };
+module.exports = { companyNames, alphabet, generateTickerSymbol, generateCompanyNames };
