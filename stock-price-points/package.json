@@ -12,11 +12,9 @@
     "start": "nodemon server/index.js",
     "build": "webpack --mode production",
     "build-watch": "webpack --mode production --watch",
-    "printId": "node data/idGenerator.js",
-    "gen-data": "node data/dataFileGenA-C.js & node data/dataFileGenD-F.js && node data/dataFileGenG-I.js & node data/dataFileGenJ-L.js && node data/dataFileGenM-O.js & node data/dataFileGenP-R.js node data/dataFileGenS-V.js",
-    "gen-data-script": "node data/generateData.sh",
-    "load-db": "psql robinhood < ./database/schema.sql",
-    "seed-json": "node database/indexpg.js"
+    "gen-data": "node data/dataGenerator.js",
+    "load-sql": "psql robinhood < ./database/schema.sql",
+    "load-cql": "cqlsh -e \"source './database/schema.cql'\""
   },
   "jest": {
     "snapshotSerializers": [
@@ -54,6 +52,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.2",
+    "cassandra-driver": "^3.5.0",
     "concurrently": "^4.0.1",
     "css-loader": "^1.0.0",
     "enzyme-to-json": "^3.3.4",
@@ -74,9 +73,3 @@
     "babel-core": "7.0.0-bridge.0"
   }
 }
-
-
-(node data/dataFileGenA-C.js & node data/dataFileGenD-F.js) &&
-  (node data/dataFileGenG-I.js & node data/dataFileGenJ-L.js) &&
-  (node data/dataFileGenM-O.js & node data/dataFileGenP-R.js) &&
-  (node data/dataFileGenS-V.js)

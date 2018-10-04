@@ -1,31 +1,33 @@
-let currPath = __dirname.split('/');
-currPath = currPath.slice(0, currPath.length - 1).join('/');
+// FILE NOT USED -- SEED DB WITH npm run load-sql
 
-console.time('PGseed');
+// let currPath = __dirname.split('/');
+// currPath = currPath.slice(0, currPath.length - 1).join('/');
 
-const { Pool, Client } = require('pg');
-// const fs = require('fs');
-const Promise = require('bluebird');
-const readFile = Promise.promisify(require('fs').readFile);
-const { alphabet } = require(`${currPath}/data/idGenerator`);
+// console.time('PGseed');
 
-const conn = {
-  user: 'jenn',
-  host: 'localhost',
-  database: 'robinhood',
-  password: '',
-  port: 5432
-};
+// const { Pool, Client } = require('pg');
+// // const fs = require('fs');
+// const Promise = require('bluebird');
+// const readFile = Promise.promisify(require('fs').readFile);
+// const { alphabet } = require(`${currPath}/data/idGenerator`);
 
-const initOptions = {
-  connect(client) {
-    const cp = client.connectionParameters;
-    // console.log('Connected to database:', cp.database);
-  }
-};
+// const conn = {
+//   user: 'jenn',
+//   host: 'localhost',
+//   database: 'robinhood',
+//   password: '',
+//   port: 5432
+// };
 
-const pgp = require('pg-promise')(initOptions);
-const db = pgp(conn);
+// const initOptions = {
+//   connect(client) {
+//     const cp = client.connectionParameters;
+//     // console.log('Connected to database:', cp.database);
+//   }
+// };
+
+// const pgp = require('pg-promise')(initOptions);
+// const db = pgp(conn);
 
 // function readData(tableLetter) {
 //   console.time('readFile');
@@ -95,18 +97,6 @@ const db = pgp(conn);
 
 // seed();
 
-const pool = new Pool(conn);
-
-// let letter = alphabet[11];
-let letter = alphabet[22];
-console.log(letter);
-let file = `./data/seed/data${letter}.csv`;
-pool.query(`\COPY ${letter}stockprices FROM '${file}' WITH DELIMITER AS ',' CSV HEADER`, (err, res) => {
-  if (err) { console.log(err); }
-  console.log(res);
-  pool.end();
-});
-
 
 // const stockPriceTableQuery = 'CREATE TABLE stockprices( id SERIAL PRIMARY KEY, companyabbr CHAR(5) NOT NULL, company VARCHAR(40) NOT NULL, weeks JSON[] NOT NULL, currentprice NUMERIC(5,2)[] NOT NULL);';
 
@@ -119,7 +109,6 @@ pool.query(`\COPY ${letter}stockprices FROM '${file}' WITH DELIMITER AS ',' CSV 
 //     console.log(err);
 //   });
     // .finally(pgp.end);
-
 
 // db.connect()
 //   .then(obj => {
