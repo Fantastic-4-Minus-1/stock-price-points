@@ -1,13 +1,12 @@
 const fs = require('fs');
 const { companyNames, alphabet } = require('./idGenerator');
-// var wstream = fs.createWriteStream('./data/seed/dataA.json');
 
-let dataSetSize = 500000; // number of companies
+let dataSetSize = 2500000; // number of companies
+// let dataSetSize = 5;
 
 // generate ticker & associating data
-const generateTickerSymbol = (set) => {
-  dataSetSize = (set[0] === 'V') ? 403505 : 500000;
-  dataSetSize = (set[0] === 'W') ? 5 : 500000;
+const generateTickerSymbol = (set) => { 
+  // dataSetSize = (set[0] === 'V') ? 403504 : dataSetSize;
   const result = [];
   let count = 0;
   const uniqueTicker = (current = '') => {
@@ -101,11 +100,99 @@ function generateCurrentPrice(annualAvg, minDiff = dailyPriceRange[0], maxDiff =
 }
 
 // Generates JSON data files
-function assembleTestData(set, wstream, label) {
-  console.time(`clock${label}`);
+// function assembleTestData(set, wstream, label) {
+//   console.time(`clock${label}`);
+//   const tickers = generateTickerSymbol(set);
+
+//   wstream.write('[');
+
+//   tickers.forEach((ticker, index) => {
+//     let companyAbbriev = ticker;
+//     let company = generateCompanyNames(ticker);
+//     let weeks = generateDataDist();
+//     let yearly = generateAnnualData(weeks);
+//     let currentPrice = generateCurrentPrice(yearly.yearAverage);
+//     let dataEntry = { company, companyAbbriev, weeks, yearly, currentPrice };
+//     wstream.write(JSON.stringify(dataEntry), () => {  });
+//     if (index < tickers.length - 1) { wstream.write(','); }
+//     else { 
+//       console.log('Last entry: ', ticker);
+//       console.log(index + 1, 'entries logged'); 
+//     }
+//   });
+//     // fs.appendFile(`${__dirname}/seed/data.json`, JSON.stringify(dataSet) + ',', (err) => {
+//     //   if (err) { console.log(err); }
+//     //   console.log('Entry saved');
+//     //   console.time('clock');
+//     // })
+//   wstream.write(']');
+//   wstream.end();
+
+//   wstream.on('finish', function () {
+//     console.timeEnd(`clock${label}`);
+//   });
+// }
+
+// Generates relational CSV data files
+// function assembleCSVTestData(set, weekIdCount) {
+//   console.time(`generate`);
+//   // let wstream = fs.createWriteStream(`./data/seed/data.csv`);
+//   // let wstreamWeek = fs.createWriteStream(`./data/seed/dataWeek.csv`);
+//   let wstream = fs.createWriteStream(`./data/seed/data${set[0]}-${set[set.length-1]}all.csv`);
+//   let wstreamWeek = fs.createWriteStream(`./data/seed/dataWeek${set[0]}-${set[set.length-1]}all.csv`);
+//   const tickers = generateTickerSymbol(set);
+//   let weekId = weekIdCount * 456976 + 1;
+
+//   wstream.write('companyabbriev|company|stockspurchased|yearhigh|yearlow|yearavg|currentprice|weekid\n');
+//   wstreamWeek.write('id|weekindex|weekaverage|weekstockpurchased\n');
+
+//   tickers.forEach((ticker, index) => {
+//     let companyAbbriev = ticker;
+//     let company = generateCompanyNames(ticker);
+//     let weeks = generateDataDist();
+//     let yearly = generateAnnualData(weeks);
+//     let currentPrice = generateCurrentPrice(yearly.yearAverage);
+//     let dataEntry = [companyAbbriev,
+//       company, 
+//       yearly.stocksPurchasedYear, 
+//       yearly.yearHighest,
+//       yearly.yearLowest,
+//       yearly.yearAverage,
+//       currentPrice,
+//       weekId].join('|').concat('\n');
+//     let dataEntryWeek = weeks.map(week => {
+//       return `${weekId}|${week.weekIndex}|${week.weekAverage}|${week.weekStocksPurchased}`
+//     }).join('\n').concat('\n');
+//     if (index < tickers.length - 1) { 
+//       wstream.write(dataEntry); 
+//       wstreamWeek.write(dataEntryWeek);
+//     }
+//     else { 
+//       wstream.write(dataEntry);
+//       wstreamWeek.write(dataEntryWeek);
+//       console.log(`Last entry: ${ticker}, weekId: ${weekId}`);
+//       console.log(`${index + 1} entries logged`); 
+//     }
+//     weekId++;
+//   });
+//   wstream.end();
+
+//   wstream.on('finish', function () {
+//     console.timeEnd(`generate`);
+//   });
+// }
+
+// Generates nonrelational CSV data files (single table)
+function assembleCombinedCSVTestData(set, weekIdCount) {
+  console.time(`generate`);
+  let wstream = fs.createWriteStream(`./data/seed/data${set[0]}-${set[set.length-1]}all.csv`);
   const tickers = generateTickerSymbol(set);
 
-  wstream.write('[');
+  wstream.write('companyabbriev|company|stockspurchased|yearhigh|yearlow|yearavg|currentprice');
+  for (let i = 1; i <= numberOfDivs; i++) {
+    wstream.write(`|week${i}average|week${i}stockspurchased`);
+  }
+  wstream.write('\n');
 
   tickers.forEach((ticker, index) => {
     let companyAbbriev = ticker;
@@ -113,60 +200,50 @@ function assembleTestData(set, wstream, label) {
     let weeks = generateDataDist();
     let yearly = generateAnnualData(weeks);
     let currentPrice = generateCurrentPrice(yearly.yearAverage);
-    let dataEntry = { company, companyAbbriev, weeks, yearly, currentPrice };
-    wstream.write(JSON.stringify(dataEntry), () => {  });
-    if (index < tickers.length - 1) { wstream.write(','); }
-    else { 
-      console.log('Last entry: ', ticker);
-      console.log(index + 1, 'entries logged'); 
+    let dataEntry = [companyAbbriev,
+      company, 
+      yearly.stocksPurchasedYear, 
+      yearly.yearHighest,
+      yearly.yearLowest,
+      yearly.yearAverage,
+      currentPrice].join('|');
+    let dataEntryWeek = weeks.map(week => {
+      return `${week.weekAverage}|${week.weekStocksPurchased}`
+    }).join('|');
+    if (index < tickers.length - 1) { 
+      wstream.write(`${dataEntry}|${dataEntryWeek}\n`); 
     }
-  });
-    // fs.appendFile(`${__dirname}/seed/data.json`, JSON.stringify(dataSet) + ',', (err) => {
-    //   if (err) { console.log(err); }
-    //   console.log('Entry saved');
-    //   console.time('clock');
-    // })
-  wstream.write(']');
-  wstream.end();
-
-  wstream.on('finish', function () {
-    console.timeEnd(`clock${label}`);
-  });
-}
-
-// Generates CSV data files
-function assembleCSVTestData(set, wstream, label) {
-  console.time(`clock${label}`);
-  const tickers = generateTickerSymbol(set);
-
-  wstream.write('companyAbbriev,company,weeks,yearly,currentPrice\n');
-
-  tickers.forEach((ticker, index) => {
-    let companyAbbriev = ticker;
-    let company = generateCompanyNames(ticker);
-    let weeks = generateDataDist();
-    let yearly = generateAnnualData(weeks);
-    let currentPrice = generateCurrentPrice(yearly.yearAverage);
-    // let dataEntry = { company, companyAbbriev, weeks, yearly, currentPrice };
-    let dataEntry = [companyAbbriev, company, '"' + JSON.stringify(weeks) + '"', '"' + JSON.stringify(yearly) + '"', '"' + JSON.stringify(currentPrice) + '"']
-      .join(',').concat('\n');
-    if (index < tickers.length - 1) { wstream.write(dataEntry); }
     else { 
-      wstream.write(dataEntry);
-      console.log('Last entry: ', ticker);
-      console.log(index + 1, 'entries logged'); 
+      wstream.write(`${dataEntry}|${dataEntryWeek}\n`);
+      console.log(`Last entry: ${ticker}`);
+      console.log(`${index + 1} entries logged`); 
     }
   });
   wstream.end();
 
   wstream.on('finish', function () {
-    console.timeEnd(`clock${label}`);
+    console.timeEnd(`generate`);
   });
 }
 
-// const dataSet = assembleTestData();
+// test
+// assembleCSVTestData(alphabet.slice(22, 23), 23);
+// assembleCombinedCSVTestData(alphabet.slice(22, 23), 23);
 
-module.exports = { assembleTestData, assembleCSVTestData }
+// assembleCSVTestData(alphabet.slice(0, 5), 0);
+// assembleCombinedCSVTestData(alphabet.slice(0, 5), 0);
+// assembleCSVTestData(alphabet.slice(5, 10), 5);
+// assembleCombinedCSVTestData(alphabet.slice(5, 10), 5);
+// assembleCSVTestData(alphabet.slice(10, 15), 10);
+// assembleCombinedCSVTestData(alphabet.slice(10, 15), 10);
+// assembleCSVTestData(alphabet.slice(15, 20), 15);
+// assembleCombinedCSVTestData(alphabet.slice(15, 20), 15);
+// assembleCSVTestData(alphabet.slice(20, 22), 20);
+// assembleCombinedCSVTestData(alphabet.slice(20, 22), 20);
+
+assembleCombinedCSVTestData(alphabet.slice(21, 22), 21);
+
+// module.exports = { assembleCSVTestData }
 
 
 
