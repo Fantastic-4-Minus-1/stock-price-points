@@ -2,11 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
-const { Company } = require('../database/index.js');
 
 const app = express();
 const router = require('./routes');
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
