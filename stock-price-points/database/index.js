@@ -52,7 +52,7 @@ function addCompany(companyEntry, distributionEntries, callback) {
     yearhigh, yearlow, yearavg, currentprice } = companyEntry;
   let queryString = `INSERT INTO stockprices (companyabbriev, company, stockspurchased, 
     yearhigh, yearlow, yearavg, currentprice, distributionid) 
-    VALUES (\'${companyabbriev}\', \'${company}\', ${stockspurchased}, 
+    VALUES ('${companyabbriev}', '${company}', ${stockspurchased}, 
     ${yearhigh}, ${yearlow}, ${yearavg}, ${currentprice}, DEFAULT) RETURNING distributionid;`;
   db.one(queryString)
     .then(result => {
@@ -72,16 +72,33 @@ function addCompany(companyEntry, distributionEntries, callback) {
       })
     .catch((err) => { 
       console.log('Error inserting company');
-      console.log(err);
       callback(err); });   
+}
+
+function updateCompany(companyEntry, distributionEntries, callback) {
+  let companyUpdate = pgp.helpers.update(companyEntry, ['company', 
+    'stockspurchased','yearhigh', 'yearlow', 'yearavg', 'currentprice'], 'stockprices') + 
+    `WHERE companyabbriev = '${companyEntry.companyabbriev}' RETURNING distributionid`;
+  db.one(companyUpdate)
+    .then(result => {
+      console.log(`DistId: ${result.distributionid}`);
+      console.log(`${companyEntry.companyabbriev} updated`);
+      let distributionUpdate = pgp.helpers.update(distributionEntries, 
+        ['?divindex', 'divaverage', 'divstockspurchased'], 'stockdistribution') + 
+        `WHERE v.divindex = t.divindex AND t.id = ${result.distributionid}`; 
+      db.none(distributionUpdate)
+        .then(() => { 
+          console.log(`Distribution updated`); 
+          callback();
+        })
+        .catch((err) => callback(err) )
+    })
+    .catch(err => { callback(err); })
 }
 
 function deleteCompany(companyAbbriev, callback) {
   let queryString = `SELECT distributionid FROM stockprices 
     WHERE companyabbriev = \'${companyAbbriev}\';`;
-  function deleteQueryString(tableName, propertyName, property) {
-    return `DELETE FROM ${tableName} WHERE ${propertyName} = \'${property}\';`;
-  }
   db.one(queryString)
     .then(result => {
       db.none(deleteQueryString('stockprices', 'companyabbriev', companyAbbriev))
@@ -98,11 +115,14 @@ function deleteCompany(companyAbbriev, callback) {
     .catch((err) => { callback(err); });
 }
 
-module.exports = { getCompany, addCompany, deleteCompany };
+function deleteQueryString(tableName, propertyName, property) {
+  return `DELETE FROM ${tableName} WHERE ${propertyName} = ${(typeof property === 'string' ? `\'${property}\'` : property)};`;
+}
 
-// const stockPriceTableQuery = 'CREATE TABLE stockprices( id SERIAL PRIMARY KEY, companyabbr CHAR(5) NOT NULL, company VARCHAR(40) NOT NULL, weeks JSON[] NOT NULL, currentprice NUMERIC(5,2)[] NOT NULL);';
+module.exports = { getCompany, addCompany, updateCompany, deleteCompany };
 
-// db.query(stockPriceTableQuery)
+
+// db.query("CREATE TABLE ---")
 //   .then(res => {
 //     console.log(res);
 //     console.timeEnd('PGseed');
@@ -112,22 +132,6 @@ module.exports = { getCompany, addCompany, deleteCompany };
 //   });
     // .finally(pgp.end);
 
-// db.connect()
-//   .then(obj => {
-//     sco = obj;
-//     return sco.any('CREATE TABLE stockPrices(id SERIAL PRIMARY KEY, company-abbr CHAR(5) NOT NULL,company VARCHAR(40) NOT NULL)');
-//     // obj.done(); // success, release the connection;
-//   })
-//   .catch(error => {
-//     console.log('ERROR:', error.message || error);
-//   })
-//   .finally(() => {
-//     // release the connection, if it was successful:
-//     if (sco) {
-//         sco.done();
-//     }
-//   });
-
 // const pool = new Pool({
 //   user: 'jenn',
 //   host: 'localhost',
@@ -136,7 +140,7 @@ module.exports = { getCompany, addCompany, deleteCompany };
 //   port: 5432,
 // })
 
-// pool.query("DROP TABLE IF EXISTS stockprices", (err, res) => {
+// pool.query("CREATE TABLE ---", (err, res) => {
 //   if (err) { console.log(err); }
 //   console.log(res);
 //   pool.end();

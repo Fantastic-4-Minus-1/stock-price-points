@@ -42,7 +42,8 @@ class App extends React.Component {
           console.log(output);
           console.log('stockPoints:', window.location.pathname);
           const { data } = output;
-          const { yearly, currentPrice } = data[0];
+          console.log('data:', data);
+          const { yearly, currentPrice } = data;
           const { yearAverage, yearLowest, yearHighest } = yearly;
           // percentage Change Helper
           function percentageChange(valOne, valTwo) {
@@ -66,10 +67,10 @@ class App extends React.Component {
           const priceOnTheLine = 676 * percentOfNumOnLine(currentPrice[0]);
           const percentChange = percentageChange(yearAverage, currentPrice[0]);
 
-          this.reloadStateData(currentPrice, yearAverage, yearLowest, yearHighest);
+          // this.reloadStateData(currentPrice, yearAverage, yearLowest, yearHighest);
 
           this.setState({
-            weeklyData: data[0].weeks.sort((a, b) => a.weekAverage - b.weekAverage),
+            weeklyData: data.weeks.sort((a, b) => a.weekAverage - b.weekAverage),
             yearly,
             averageOnTheLine,
             priceOnTheLine,

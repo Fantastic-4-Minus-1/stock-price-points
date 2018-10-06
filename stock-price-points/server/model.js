@@ -1,50 +1,25 @@
-const { getCompany, addCompany, deleteCompany } = require('../database/index');
+const { getCompany, addCompany, updateCompany, deleteCompany } = require('../database/index');
 
 const model = {
   all: {
     get: (callback) => {
-      Company.find({}, (err, data) => {
-        if (err) { return callback(err); }
-        callback(null, data);
-      })
+      // Company.find({}, (err, data) => {
+      //   if (err) { return callback(err); }
+      //   callback(null, data);
+      // })
+      // Do not return all database entries
+      callback(null, {});
     }
   },
   company: {
     post: (body, callback) => {
-      let { company, companyAbbriev, weeks, yearly, currentPrice } = body;
-      let companyEntry = {
-        companyabbriev: companyAbbriev,
-        company: company,
-        stockspurchased: yearly.stocksPurchasedYear,
-        yearhigh: yearly.yearHighest,
-        yearlow: yearly.yearLowest,
-        yearavg: yearly.yearAverage,
-        currentprice: currentPrice[0]
-      };
-      let distributionEntries = weeks.map(week => {
-        return {
-          divindex: week.weekIndex,
-          divaverage: week.weekAverage,
-          divstockspurchased: week.weekStocksPurchased
-        }
-      });
+      let { companyEntry, distributionEntries } = formatForDatabase(body);
       addCompany(companyEntry, distributionEntries, (err, results) => {
         if (err) { callback(err); }
         if (!results) { callback(null, {}); }
         else { callback(null); }
       });
-
-      // Company.find({ company }, null, (err, data) => {
-      //   if (err) { return callback(err); }
-      //   else if (!data) { console.log('Company already exists, use PUT to update'); }
-      //   else {
-      //     let newCompany = new Company({ company, companyAbbriev, weeks, yearly, currentPrice });
-      //     newCompany.save((err) => {
-      //       if (err) { callback(err); }
-      //       callback();
-      //     });
-      //   }
-      // })
+      // if company already exists, return 'exists'
     },
     get: (companyAbbriev, callback) => {
       getCompany(companyAbbriev, (err, results) => {
@@ -54,25 +29,20 @@ const model = {
       });
     },
     put: (body, callback) => {
-      let { company, companyAbbriev, weeks, yearly, currentPrice } = body;
-      Company.findOneAndUpdate({ company }, { company, companyAbbriev, weeks, yearly, currentPrice }, null, (err, data) => {
-        if (err) { return callback(err); }
-        else if (!data) {
-          newCompany.save((err) => {
-            if (err) { callback(err); }
-            callback();
-          });
-        } else { 
-          console.log('Updated');
-          callback(); 
-        }
-      });
+      let { companyEntry, distributionEntries } = formatForDatabase(body);
+      updateCompany(companyEntry, distributionEntries, (err, results) => {
+        if (err) { callback(err); }
+        else if (!results) { callback(null, {}); }
+        else { callback(null, results); }
+      })
+      // if company not found, save companyEntry
     },
     delete: (companyAbbriev, callback) => {
       deleteCompany(companyAbbriev, (err) => {
         if (err) { callback(err); }
         callback();
       })
+      // if company not found, return null
     }
   }
 }
@@ -102,7 +72,24 @@ function formatForClient(databaseResults) {
 }
 
 function formatForDatabase(clientParams) {
-
+  let { company, companyAbbriev, weeks, yearly, currentPrice } = clientParams;
+    let companyEntry = {
+      companyabbriev: companyAbbriev,
+      company: company,
+      stockspurchased: yearly.stocksPurchasedYear,
+      yearhigh: yearly.yearHighest,
+      yearlow: yearly.yearLowest,
+      yearavg: yearly.yearAverage,
+      currentprice: currentPrice[0]
+    };
+    let distributionEntries = weeks.map(week => {
+      return {
+        divindex: week.weekIndex,
+        divaverage: week.weekAverage,
+        divstockspurchased: week.weekStocksPurchased
+      }
+    });
+  return { companyEntry, distributionEntries };
 }
 
 module.exports = model;
