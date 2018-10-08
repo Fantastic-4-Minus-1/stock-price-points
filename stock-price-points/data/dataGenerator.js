@@ -2,7 +2,7 @@ const fs = require('fs');
 const { alphabet, generateTickerSymbol, generateCompanyNames } = require('./idGenerator');
 
 // price distribution
-const numberOfDivs = 15; // number of bars
+const numberOfDivs = 30; // number of bars
 const maxPurchasedPerDiv = 800; // height of bar graph
 
 // price variables
@@ -35,9 +35,9 @@ function generateDataDist() {
       prevDivValue = quantity;
     }
     results.push({
-      weekIndex: i,
-      weekAverage: divAvg,
-      weekStocksPurchased: quantity
+      divIndex: i,
+      divAverage: divAvg,
+      divStocksPurchased: quantity
     })
   }
   return results;
@@ -49,10 +49,10 @@ function generateAnnualData(distributionData) {
   let totalSharesPurchased = 0;
   let weightedSum = 0;
   for (var div of distributionData) {
-    if (!annualMin || div.weekAverage < annualMin) { annualMin = div.weekAverage; }
-    if (!annualMax || div.weekAverage > annualMax) { annualMax = div.weekAverage; }
-    totalSharesPurchased += div.weekStocksPurchased;
-    weightedSum += div.weekStocksPurchased * div.weekAverage;
+    if (!annualMin || div.divAverage < annualMin) { annualMin = div.divAverage; }
+    if (!annualMax || div.divAverage > annualMax) { annualMax = div.divAverage; }
+    totalSharesPurchased += div.divStocksPurchased;
+    weightedSum += div.divStocksPurchased * div.divAverage;
   }
   return {
     stocksPurchasedYear: totalSharesPurchased,
@@ -73,21 +73,21 @@ function generateCurrentPrice(annualAvg, minDiff = dailyPriceRange[0], maxDiff =
 }
 
 // Generates relational CSV data files
-function assembleCSVTestData(set, weekIdCount) {
+function assembleCSVTestData(set, divIdCount) {
   console.time(`generate`);
-  let wstream = fs.createWriteStream(`./data/seed/data${set[0]}-${set[set.length-1]}all.csv`);
-  let wstreamWeek = fs.createWriteStream(`./data/seed/dataWeek${set[0]}-${set[set.length-1]}all.csv`);
+  let wstream = fs.createWriteStream(`./data/seed/data${set[0]}-${set[set.length-1]}.csv`);
+  let wstreamDist = fs.createWriteStream(`./data/seed/dataDist${set[0]}-${set[set.length-1]}.csv`);
   const tickers = generateTickerSymbol(set);
-  let weekId = weekIdCount * 456976 + 1;
+  let divId = divIdCount * 456976 + 1;
 
-  wstream.write('companyabbriev|company|stockspurchased|yearhigh|yearlow|yearavg|currentprice|weekid\n');
-  wstreamWeek.write('id|weekindex|weekaverage|weekstockpurchased\n');
+  wstream.write('companyabbriev|company|stockspurchased|yearhigh|yearlow|yearavg|currentprice|divid\n');
+  wstreamDist.write('id|divindex|divaverage|divstockspurchased\n');
 
   tickers.forEach((ticker, index) => {
     let companyAbbriev = ticker;
     let company = generateCompanyNames(ticker);
-    let weeks = generateDataDist();
-    let yearly = generateAnnualData(weeks);
+    let distribution = generateDataDist();
+    let yearly = generateAnnualData(distribution);
     let currentPrice = generateCurrentPrice(yearly.yearAverage);
     let dataEntry = [companyAbbriev,
       company, 
@@ -96,21 +96,21 @@ function assembleCSVTestData(set, weekIdCount) {
       yearly.yearLowest,
       yearly.yearAverage,
       currentPrice,
-      weekId].join('|').concat('\n');
-    let dataEntryWeek = weeks.map(week => {
-      return `${weekId}|${week.weekIndex}|${week.weekAverage}|${week.weekStocksPurchased}`
+      divId].join('|').concat('\n');
+    let dataEntryDist = distribution.map(div => {
+      return `${divId}|${div.divIndex}|${div.divAverage}|${div.divStocksPurchased}`
     }).join('\n').concat('\n');
     if (index < tickers.length - 1) { 
       wstream.write(dataEntry); 
-      wstreamWeek.write(dataEntryWeek);
+      wstreamDist.write(dataEntryDist);
     }
     else { 
       wstream.write(dataEntry);
-      wstreamWeek.write(dataEntryWeek);
-      console.log(`Last entry: ${ticker}, weekId: ${weekId}`);
+      wstreamDist.write(dataEntryDist);
+      console.log(`Last entry: ${ticker}, divId: ${divId}`);
       console.log(`${index + 1} entries logged`); 
     }
-    weekId++;
+    divId++;
   });
   wstream.end();
 
@@ -119,10 +119,10 @@ function assembleCSVTestData(set, weekIdCount) {
   });
 }
 
-assembleCSVTestData(alphabet.slice(0, 5), 0);
-assembleCSVTestData(alphabet.slice(5, 10), 5);
-assembleCSVTestData(alphabet.slice(10, 15), 10);
-assembleCSVTestData(alphabet.slice(15, 20), 15);
+// assembleCSVTestData(alphabet.slice(0, 5), 0);
+// assembleCSVTestData(alphabet.slice(5, 10), 5);
+// assembleCSVTestData(alphabet.slice(10, 15), 10);
+// assembleCSVTestData(alphabet.slice(15, 20), 15);
 assembleCSVTestData(alphabet.slice(20, 22), 20);
 
 // module.exports = { assembleCSVTestData }

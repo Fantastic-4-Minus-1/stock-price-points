@@ -1,0 +1,66 @@
+config:
+  target: "http://localhost:3002"
+  phases:
+    - duration: 15
+      arrivalRate: 5
+    - duration: 180
+      arrivalRate: 5
+      rampTo: 15
+    - duration: 180
+      arrivalRate: 15
+  payload:
+    path: "companyids.csv"
+    fields:
+      - "comp0"
+      - "comp1"
+      - "comp2"
+      - "comp3"
+      - "comp4"
+      - "comp5"
+      - "comp6"
+      - "comp7"
+      - "comp8"
+      - "comp9"
+  # when CPU starts getting high, have less users send more requests
+scenarios:
+  - flow:
+    - loop:
+      - get:
+          url: "/api/stockPricePoints/{{ comp0 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp1 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp2 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp3 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp4 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp5 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp6 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp7 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp8 }}"
+      - get:
+          url: "/api/stockPricePoints/{{ comp9 }}"
+      count: 5
+
+
+# All virtual users finished
+# Summary report @ 16:53:11(-0700) 2018-10-07
+#   Scenarios launched:  4570
+#   Scenarios completed: 4570
+#   Requests completed:  228500
+#   RPS sent: 410.79
+#   Request latency:
+#     min: 2.1
+#     max: 4811.4
+#     median: 1416
+#     p95: 2576.9
+#     p99: 3353.5
+#   Scenario counts:
+#     0: 4570 (100%)
+#   Codes:
+#     200: 228500

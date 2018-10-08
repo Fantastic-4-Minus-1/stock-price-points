@@ -37,11 +37,12 @@ class App extends React.Component {
     };
 
     this.getDataSetInitialState = () => {
-      axios.get(`/api/stockPricePoints${window.location.pathname}`)
+      axios.get(`/api/stockPricePoints${window.location.pathname.slice(0, window.location.pathname.length - 1)}`)
         .then((output) => {
           console.log(output);
           console.log('stockPoints:', window.location.pathname);
           const { data } = output;
+          console.log('data:', data);
           const { yearly, currentPrice } = data[0];
           const { yearAverage, yearLowest, yearHighest } = yearly;
           // percentage Change Helper
@@ -66,7 +67,7 @@ class App extends React.Component {
           const priceOnTheLine = 676 * percentOfNumOnLine(currentPrice[0]);
           const percentChange = percentageChange(yearAverage, currentPrice[0]);
 
-          this.reloadStateData(currentPrice, yearAverage, yearLowest, yearHighest);
+          // this.reloadStateData(currentPrice, yearAverage, yearLowest, yearHighest);
 
           this.setState({
             weeklyData: data[0].weeks.sort((a, b) => a.weekAverage - b.weekAverage),
