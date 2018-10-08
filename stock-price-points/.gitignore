@@ -28,6 +28,6 @@ dist/
 data/seed/
 
 # Stress Testing
-
 newrelic.js
+companyids.csv
 

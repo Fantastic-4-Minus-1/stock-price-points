@@ -1,49 +1,63 @@
 const { getCompany, addCompany, updateCompany, deleteCompany } = require('../database/index');
+const Promise = require('bluebird');
 
 const model = {
   all: {
     get: (callback) => {
-      // Company.find({}, (err, data) => {
-      //   if (err) { return callback(err); }
-      //   callback(null, data);
-      // })
       // Do not return all database entries
       callback(null, {});
     }
   },
   company: {
-    post: (body, callback) => {
+    post: (body) => {
       let { companyEntry, distributionEntries } = formatForDatabase(body);
-      addCompany(companyEntry, distributionEntries, (err, results) => {
-        if (err) { callback(err); }
-        if (!results) { callback(null, {}); }
-        else { callback(null); }
-      });
-      // if company already exists, return 'exists'
+      return new Promise((resolve, reject) => {
+        addCompany(companyEntry, distributionEntries)
+          .then((results) => {
+            if (!results) { resolve({}) }
+            else { resolve(); }
+          })
+          .catch((err) => { reject(err); })
+          // if company already exists, return 'exists'
+      })
     },
-    get: (companyAbbriev, callback) => {
-      getCompany(companyAbbriev, (err, results) => {
-        if (err) { callback(err); }
-        if (!results) { callback(null, {}); }
-        // else { callback(null, results); }
-        else { callback(null, formatForClient(results)); }
-      });
+    get: (companyAbbriev) => {
+      return new Promise((resolve, reject) => {
+        getCompany(companyAbbriev)
+          .then((results) => {
+            if (!results) { resolve({}); }
+            else { resolve(formatForClient(results)); }
+          })
+          .catch((err) => { reject(err); })
+      })
     },
-    put: (body, callback) => {
+    // get: (companyAbbriev, callback) => {
+    //   getCompany(companyAbbriev, (err, results) => {
+    //     if (err) { callback(err); }
+    //     if (!results) { callback(null, {}); }
+    //     // else { callback(null, results); }
+    //     else { callback(null, formatForClient(results)); }
+    //   });
+    // },
+    put: (body) => {
       let { companyEntry, distributionEntries } = formatForDatabase(body);
-      updateCompany(companyEntry, distributionEntries, (err, results) => {
-        if (err) { callback(err); }
-        else if (!results) { callback(null, {}); }
-        else { callback(null, results); }
+      return new Promise((resolve, reject) => {
+        updateCompany(companyEntry, distributionEntries)
+          .then(results => {
+            if (!results) { resolve({}) }
+            else { resolve(results); }
+          })
+          .catch(err => { reject(err); })
+          // if company not found, save companyEntry
       })
-      // if company not found, save companyEntry
     },
-    delete: (companyAbbriev, callback) => {
-      deleteCompany(companyAbbriev, (err) => {
-        if (err) { callback(err); }
-        callback();
+    delete: (companyAbbriev) => {
+      return new Promise((resolve, reject) => {
+        deleteCompany(companyAbbriev)
+          .then(() => resolve())
+          .catch(err => reject(err))
+          // if company not found, return null
       })
-      // if company not found, return null
     }
   }
 }
