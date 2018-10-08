@@ -25,8 +25,8 @@ const model = {
       return new Promise((resolve, reject) => {
         getCompany(companyAbbriev)
           .then((results) => {
-            if (!results) { resolve({}); }
-            else { resolve(formatForClient(results)); }
+            if (results.rows.length === 0) { resolve({}); }
+            else { resolve(formatForClient(results.rows)); }
           })
           .catch((err) => { reject(err); })
       })

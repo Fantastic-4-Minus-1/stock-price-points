@@ -31,14 +31,7 @@ function getCompany(companyAbbriev) {
   let queryString = `SELECT * FROM stockprices INNER JOIN stockdistribution 
     ON stockprices.distributionid = stockdistribution.id 
     WHERE stockprices.companyabbriev = \'${companyAbbriev}\'`;
-  return new Promise((resolve, reject) => {
-    db.result(queryString)
-      .then(data => {
-        if (data.rows.length === 0) { resolve(false); }
-        else { resolve(data.rows); }
-      })
-      .catch((err) => { reject(err); })
-  })
+  return db.result(queryString);
 }
 
 function addCompany(companyEntry, distributionEntries) {
@@ -48,70 +41,54 @@ function addCompany(companyEntry, distributionEntries) {
     yearhigh, yearlow, yearavg, currentprice, distributionid) 
     VALUES ('${companyabbriev}', '${company}', ${stockspurchased}, 
     ${yearhigh}, ${yearlow}, ${yearavg}, ${currentprice}, DEFAULT) RETURNING distributionid;`;
-  return new Promise((resolve, reject) => {
-    console.log(queryString);
-    db.one(queryString)
-      .then(result => {
-          // console.log(`DistId: ${result.distributionid}`);
-          // console.log(`${companyEntry.companyabbriev} inserted`);
-          let distributionEntriesWithId = distributionEntries.map(div => { 
-            return {...div, id: result.distributionid}; 
-          })
-          let distributionInsert = pgp.helpers.insert(distributionEntriesWithId, distributionColSet);
-          db.none(distributionInsert)
-            .then(() => { 
-              console.log(`Distribution inserted`); 
-              resolve();
+    return ( 
+      db.one(queryString)
+        .then(result => {
+            console.log(`DistId: ${result.distributionid}`);
+            console.log(`${companyEntry.companyabbriev} inserted`);
+            let distributionEntriesWithId = distributionEntries.map(div => { 
+              return {...div, id: result.distributionid}; 
             })
-            .catch((err) => reject(err) );
-        })
-      .catch((err) => { 
-        console.log('Error inserting company');
-        reject(err); });   
-  })
+            let distributionInsert = pgp.helpers.insert(distributionEntriesWithId, distributionColSet);
+            return db.none(distributionInsert)
+          })
+        .catch((err) => { 
+          console.log('Error inserting company');
+          reject(err); }))   
 }
 
 function updateCompany(companyEntry, distributionEntries) {
   let companyUpdate = pgp.helpers.update(companyEntry, ['company', 
     'stockspurchased','yearhigh', 'yearlow', 'yearavg', 'currentprice'], 'stockprices') + 
     `WHERE companyabbriev = '${companyEntry.companyabbriev}' RETURNING distributionid`;
-  return new Promise((resolve, reject) => {
+  return(
     db.one(companyUpdate)
       .then(result => {
-        // console.log(`DistId: ${result.distributionid}`);
-        // console.log(`${companyEntry.companyabbriev} updated`);
+        console.log(`DistId: ${result.distributionid}`);
+        console.log(`${companyEntry.companyabbriev} updated`);
         let distributionUpdate = pgp.helpers.update(distributionEntries, 
           ['?divindex', 'divaverage', 'divstockspurchased'], 'stockdistribution') + 
           `WHERE v.divindex = t.divindex AND t.id = ${result.distributionid}`; 
-        db.none(distributionUpdate)
-          .then(() => { 
-            console.log(`Distribution updated`); 
-            resolve();
-          })
-          .catch((err) => reject(err))
+        return db.none(distributionUpdate);
       })
       .catch(err => reject(err))
-  })
+  )
 }
 
 function deleteCompany(companyAbbriev, callback) {
   let queryString = `SELECT distributionid FROM stockprices 
     WHERE companyabbriev = \'${companyAbbriev}\';`;
-  return new Promise((resolve, reject) => {
-    db.one(queryString)
-      .then(result => {
-        db.none(deleteQueryString('stockprices', 'companyabbriev', companyAbbriev))
-          .then(() => {
-            db.none(deleteQueryString('stockdistribution', 'id', result.distributionid))
-              .then(() => { 
-                resolve(); 
-              })
-              .catch((err) => { reject(err); })
-          })
-          .catch((err) => { reject(err); })
-      })
-      .catch((err) => { reject(err); });
-  })
+    return(
+      db.one(queryString)
+        .then(result => {
+          db.none(deleteQueryString('stockprices', 'companyabbriev', companyAbbriev))
+            .then(() => {
+              return db.none(deleteQueryString('stockdistribution', 'id', result.distributionid));
+            })
+            .catch((err) => reject(err))
+        })
+        .catch((err) => reject(err))
+    )
 }
 
 function deleteQueryString(tableName, propertyName, property) {
