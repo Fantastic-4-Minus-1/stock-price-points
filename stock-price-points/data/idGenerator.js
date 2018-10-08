@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const dataSetSize = 2500000;
 
 const companyNames = {
@@ -59,5 +61,19 @@ const generateTickerSymbol = (set) => {
 function generateCompanyNames(ticker) {
   return `${companyNames[ticker[0]]} ${companyNames[ticker[4]]}`;
 }
+
+// generates companyids.csv for Artillery load testing
+
+// let loadTestFile = 'comp0,comp1,comp2,comp3,comp4,comp5,comp6,comp7,comp8,comp9\n';
+// let countPerLine = 10;
+// let tickers = generateTickerSymbol(alphabet.slice(0, 22));
+// for (let i = 0; (i + countPerLine) < tickers.length; i += countPerLine) {
+//   let line = tickers.slice(i, i + countPerLine).join(',');
+//   loadTestFile = loadTestFile.concat(line, '\n');
+// }
+
+// fs.writeFile('./companyids.csv', loadTestFile, (err) => {
+//   if (err) { console.log(err); }
+// })
 
 module.exports = { companyNames, alphabet, generateTickerSymbol, generateCompanyNames };

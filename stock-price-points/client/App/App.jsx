@@ -37,7 +37,7 @@ class App extends React.Component {
     };
 
     this.getDataSetInitialState = () => {
-      axios.get(`/api/stockPricePoints${window.location.pathname}`)
+      axios.get(`/api/stockPricePoints${window.location.pathname.slice(0, window.location.pathname.length - 1)}`)
         .then((output) => {
           console.log(output);
           console.log('stockPoints:', window.location.pathname);

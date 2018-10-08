@@ -1,20 +1,20 @@
+require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
-const logger = require('morgan');
-const path = require('path');
+// const logger = require('morgan');
 
 const app = express();
 const router = require('./routes');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(logger('dev'));
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(logger('dev'));
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//   next();
+// });
 
 app.use('/:company', express.static('public'));
 

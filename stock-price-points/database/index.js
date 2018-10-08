@@ -3,7 +3,7 @@ const { Pool, Client } = require('pg');
 const initOptions = {
   connect(client) {
     const cp = client.connectionParameters;
-    console.log('Connected to database:', cp.database);
+    // console.log('Connected to database:', cp.database);
   }
 };
 
@@ -56,8 +56,8 @@ function addCompany(companyEntry, distributionEntries, callback) {
     ${yearhigh}, ${yearlow}, ${yearavg}, ${currentprice}, DEFAULT) RETURNING distributionid;`;
   db.one(queryString)
     .then(result => {
-        console.log(`DistId: ${result.distributionid}`);
-        console.log(`${companyEntry.companyabbriev} inserted`);
+        // console.log(`DistId: ${result.distributionid}`);
+        // console.log(`${companyEntry.companyabbriev} inserted`);
         
         let distributionEntriesWithId = distributionEntries.map(div => { 
           return {...div, id: result.distributionid}; 
@@ -71,7 +71,7 @@ function addCompany(companyEntry, distributionEntries, callback) {
           .catch((err) => callback(err) )
       })
     .catch((err) => { 
-      console.log('Error inserting company');
+      // console.log('Error inserting company');
       callback(err); });   
 }
 
@@ -81,14 +81,14 @@ function updateCompany(companyEntry, distributionEntries, callback) {
     `WHERE companyabbriev = '${companyEntry.companyabbriev}' RETURNING distributionid`;
   db.one(companyUpdate)
     .then(result => {
-      console.log(`DistId: ${result.distributionid}`);
-      console.log(`${companyEntry.companyabbriev} updated`);
+      // console.log(`DistId: ${result.distributionid}`);
+      // console.log(`${companyEntry.companyabbriev} updated`);
       let distributionUpdate = pgp.helpers.update(distributionEntries, 
         ['?divindex', 'divaverage', 'divstockspurchased'], 'stockdistribution') + 
         `WHERE v.divindex = t.divindex AND t.id = ${result.distributionid}`; 
       db.none(distributionUpdate)
         .then(() => { 
-          console.log(`Distribution updated`); 
+          // console.log(`Distribution updated`); 
           callback();
         })
         .catch((err) => callback(err) )
@@ -105,7 +105,7 @@ function deleteCompany(companyAbbriev, callback) {
         .then(() => {
           db.none(deleteQueryString('stockdistribution', 'id', result.distributionid))
             .then(() => { 
-              console.log(`${companyAbbriev} deleted`);
+              // console.log(`${companyAbbriev} deleted`);
               callback(); 
             })
             .catch((err) => { callback(err); })

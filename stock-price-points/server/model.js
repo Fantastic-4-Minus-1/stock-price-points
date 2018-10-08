@@ -25,6 +25,7 @@ const model = {
       getCompany(companyAbbriev, (err, results) => {
         if (err) { callback(err); }
         if (!results) { callback(null, {}); }
+        // else { callback(null, results); }
         else { callback(null, formatForClient(results)); }
       });
     },
