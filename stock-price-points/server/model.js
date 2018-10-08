@@ -31,14 +31,6 @@ const model = {
           .catch((err) => { reject(err); })
       })
     },
-    // get: (companyAbbriev, callback) => {
-    //   getCompany(companyAbbriev, (err, results) => {
-    //     if (err) { callback(err); }
-    //     if (!results) { callback(null, {}); }
-    //     // else { callback(null, results); }
-    //     else { callback(null, formatForClient(results)); }
-    //   });
-    // },
     put: (body) => {
       let { companyEntry, distributionEntries } = formatForDatabase(body);
       return new Promise((resolve, reject) => {
