@@ -4,17 +4,25 @@ const Promise = require('bluebird');
 const initOptions = {
   connect(client) {
     const cp = client.connectionParameters;
-    // console.log('Connected to database:', cp.database);
+    console.log('Connected to database:', cp.database);
   }
 };
 
+// const conn = {
+//   user: 'jenn',
+//   host: 'localhost',
+//   database: 'robinhood',
+//   password: '',
+//   port: 5432
+// };
+
 const conn = {
-  user: 'jenn',
-  host: 'localhost',
-  database: 'robinhood',
-  password: '',
-  port: 5432
-};
+    user: 'other_user',
+    host: 'ec2-54-153-49-106.us-west-1.compute.amazonaws.com',
+    database: 'robinhood',
+    password: 'jenn',
+    port: 5432
+  };
 
 const pgp = require('pg-promise')(initOptions);
 const db = pgp(conn);

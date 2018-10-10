@@ -3,9 +3,11 @@ const Promise = require('bluebird');
 
 const model = {
   all: {
-    get: (callback) => {
+    get: () => {
       // Do not return all database entries
-      callback(null, {});
+      return new Promise((resolve, reject) => {
+        resolve();
+      });
     }
   },
   company: {

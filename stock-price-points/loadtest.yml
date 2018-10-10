@@ -47,20 +47,68 @@ scenarios:
           url: "/api/stockPricePoints/{{ comp9 }}"
       count: 5
 
-
+# default
+# Warning: High CPU usage warning (pids: 56610).
+# See https://artillery.io/docs/faq/#high-cpu-warningsfor details.
 # All virtual users finished
-# Summary report @ 16:53:11(-0700) 2018-10-07
-#   Scenarios launched:  4570
-#   Scenarios completed: 4570
-#   Requests completed:  228500
-#   RPS sent: 410.79
+# Summary report @ 09:04:24(-0700) 2018-10-09
+#   Scenarios launched:  4563
+#   Scenarios completed: 4563
+#   Requests completed:  228150
+#   RPS sent: 387.88
 #   Request latency:
-#     min: 2.1
-#     max: 4811.4
-#     median: 1416
-#     p95: 2576.9
-#     p99: 3353.5
+#     min: 2.2
+#     max: 4391.7
+#     median: 1093.5
+#     p95: 2432.9
+#     p99: 2884
 #   Scenario counts:
-#     0: 4570 (100%)
+#     0: 4563 (100%)
 #   Codes:
-#     200: 228500
+#     200: 228150
+
+# with nginx server
+# All virtual users finished
+# Summary report @ 22:47:46(-0700) 2018-10-08
+#   Scenarios launched:  4593
+#   Scenarios completed: 2539
+#   Requests completed:  167753
+#   RPS sent: 343.5
+#   Request latency:
+#     min: 0.5
+#     max: 45468.7
+#     median: 684.3
+#     p95: 1438.2
+#     p99: 2480.8
+#   Scenario counts:
+#     0: 4593 (100%)
+#   Codes:
+#     200: 147045
+#     502: 20708
+#   Errors:
+#     ECONNRESET: 2050
+#     ETIMEDOUT: 4
+#     ESOCKETTIMEDOUT: 104
+
+# with nginx server & caching
+# All virtual users finished
+# Summary report @ 23:20:01(-0700) 2018-10-08
+#   Scenarios launched:  4592
+#   Scenarios completed: 2478
+#   Requests completed:  161418
+#   RPS sent: 348.6
+#   Request latency:
+#     min: 2.8
+#     max: 42845.2
+#     median: 557.5
+#     p95: 1263.5
+#     p99: 1967
+#   Scenario counts:
+#     0: 4592 (100%)
+#   Codes:
+#     200: 129885
+#     502: 31533
+#   Errors:
+#     ETIMEDOUT: 7
+#     ECONNRESET: 2107
+#     ESOCKETTIMEDOUT: 87
