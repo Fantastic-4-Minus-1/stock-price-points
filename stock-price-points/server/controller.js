@@ -1,4 +1,11 @@
+const redis = require('redis');
 const model = require('./model');
+
+
+
+client.on('error', function (err) {
+  console.log('Error ' + err);
+})
 
 const controller = {
   all: {
@@ -15,9 +22,18 @@ const controller = {
         .catch(err => res.status('400').send(err))
     },
     get: (req, res) => {
-      model.company.get(req.params.company)
-        .then(data => res.json(data))
-        .catch(err => res.status('400').send(err))
+      client.get(req.params.company, (err, cache) => {
+        if (err) { res.send(err); }
+        if (cache) { res.json(cache); }
+        else {
+          model.company.get(req.params.company)
+            .then(data => {
+              client.setex(req.params.company, 300, JSON.stringify(data));
+              res.json(data);
+            })
+            .catch(err => res.status('400').send(err))
+        }
+      })
     },
     put: (req, res) => {
       model.company.put(req.body)
