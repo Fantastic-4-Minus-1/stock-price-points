@@ -20,7 +20,7 @@ const conn = {
     user: 'other_user',
     host: 'ec2-54-153-49-106.us-west-1.compute.amazonaws.com',
     database: 'robinhood',
-    password: 'jenn',
+    password: 'jennthh',
     port: 5432
   };
 
